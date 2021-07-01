@@ -1,0 +1,11 @@
+{
+  "Cosmetics": {
+    "Color": {
+      "success": "0x69e34d",
+      "fail": "0xe34d4d"
+  },
+    "Text": {
+      "fail": "There was an error while running the command."
+    }
+  }
+}
