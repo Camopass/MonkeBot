@@ -3,7 +3,7 @@ import os
 import discord
 
 from discord.ext import commands
-from util.GeToken import get_token
+from util.GetToken import get_token
 
 token = get_token()
 intents = discord.Intents.all()
