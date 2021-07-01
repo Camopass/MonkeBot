@@ -1,11 +1,13 @@
-# Monke Bot V 1.0 Alpha
+# Monke Bot V 1.01 Alpha
 import os
+import discord
 
 from discord.ext import commands
 from util.GeToken import get_token
 
 token = get_token()
-bot = commands.Bot('?')
+intents = discord.Intents.all()
+bot = commands.Bot('?', intents=intents)
 
 
 @bot.event
@@ -28,6 +30,6 @@ for category in os.listdir('Main/Cogs'):
     for cog in os.listdir(f'Main/Cogs/{category}'):
         if cog.endswith('.py'):
             bot.load_extension(f'Cogs.{category}.{cog[:-3]}')
-        print(f'Loaded {cog}')
+            print(f'Loaded {cog}')
 
 bot.run(token)

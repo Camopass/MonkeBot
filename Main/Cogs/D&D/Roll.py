@@ -22,8 +22,8 @@ class Roll(commands.Cog):
             return await ctx.send(embed=e)
         res = []
         dice = re.split(r' +?\+ *', roll)
-        print(dice)
         for die in dice:
+            res.append(f'`{die}`')
             try:
                 if die.startswith('d'):
                     d = die[-1:]
@@ -38,8 +38,10 @@ class Roll(commands.Cog):
                     description='Could not understand that value.',
                     color=self.config.cosmetics.color.fail
                 ))
-
-        total = sum(res)
+        total = 0
+        for i in res:
+            if type(i) != str:
+                total += i
         res = [str(i) for i in res]
         res = ', '.join(res)
 
