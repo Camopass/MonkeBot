@@ -16,7 +16,7 @@ async def on_ready():
     print('Bot is Ready')
     print('Client Name')
     print(bot.user.name)
-    print('Client Name')
+    print('Client ID')
     print(bot.user.id)
     print('------------')
 
