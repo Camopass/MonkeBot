@@ -2,10 +2,21 @@
   "Cosmetics": {
     "Color": {
       "success": "0x69e34d",
-      "fail": "0xe34d4d"
-  },
+      "fail": "0xe34d4d",
+      "starboard": "0xFFFF00"
+    },
     "Text": {
-      "fail": "There was an error while running the command."
+      "fail": "There was an error while running the command.",
+      "starboard_remove": "Starboard Removed."
+    },
+    "Emoji": {
+      "accept": "✅",
+      "deny": "❌"
+    }
+  },
+  "Functionality": {
+    "SQL": {
+      "db_name": "MonkeBot.db"
     }
   }
 }

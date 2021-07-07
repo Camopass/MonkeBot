@@ -38,7 +38,6 @@ db_name = config.functionality.SQL.db_name
 star_emoji = '\U00002b50'
 star_color = config.cosmetics.color.starboard
 
-
 # I do not want it to allow any files that could run.
 accepted_filetypes = [
     'png',
@@ -210,10 +209,12 @@ class Starboard(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload):
-        if payload.guild_id == None:
+    async def on_raw_reaction_add(self, payload: discord.RawReactionActionEvent):
+        if payload.guild_id is None:
             return
         if payload.member.bot:
+            return
+        if payload.member.id == self.bot.user.id:
             return
         count = await get_raw_count(self.bot, payload)
         db = await aiosqlite3.connect(self.db_name)  # Connect to database
@@ -228,8 +229,8 @@ class Starboard(commands.Cog):
                 if payload.channel_id == channel_id:
                     message0 = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
                     message = await StarboardFromMessage(message0, limit, self.bot)
-                    await message.edit_star_count(message,
-                                                  await get_star_count(message.original_message, message0, emoji))
+                    star_count = await get_star_count(message.original_message, message0, emoji)
+                    await message.edit_star_count(message, star_count)
                     return
         await db.close()
         if not is_starboard:
@@ -238,12 +239,12 @@ class Starboard(commands.Cog):
             if str(payload.emoji) == emoji and count >= limit:
                 message = await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)
                 for reaction in message.reactions:
-                    if str(reaction.emoji) == '\U00002b50':
+                    if str(reaction.emoji) == star_emoji:
                         async for user in reaction.users():
                             if user == self.bot.user:
                                 star_channel = self.bot.get_channel(channel_id)
                                 async for star in star_channel.history(limit=200):
-                                    if len(star.embeds) == 1 and star.author == self.bot.user\
+                                    if len(star.embeds) == 1 and star.author == self.bot.user \
                                             and star.content.startswith(str(payload.message_id)):
                                         star = await StarboardFromMessage(star, limit, self.bot)
                                         star_count = await get_star_count(star.message, message, emoji)
@@ -252,7 +253,7 @@ class Starboard(commands.Cog):
                                 return
                 star_message = await StarboardMessage(message, limit)
                 await star_message.send(star_message, self.bot, payload.guild_id)
-                await message.add_reaction('\U00002b50')
+                await message.add_reaction(config.cosmetics.emoji.accept)
 
     @commands.group(
         description='Allows users to add the :star: reaction (or a custom one) to add a message to a new channel '
