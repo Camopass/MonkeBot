@@ -1,0 +1,15 @@
+Index: Main/token.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>Njk1NDI1NTQ3Nzc3NDc0NjIx.XoZ_gg.wiYqZvDpQ4X6DlMAa771b7rDjgA
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Main/token.txt b/Main/token.txt
+--- a/Main/token.txt	(revision 147c5fa63d7beb6597abe8da2196c30ca8ade186)
++++ b/Main/token.txt	(date 1625671500891)
+@@ -1,1 +1,1 @@
+-Njk1NDI1NTQ3Nzc3NDc0NjIx.XoZ_gg.wiYqZvDpQ4X6DlMAa771b7rDjgA
+\ No newline at end of file
++Njk1NDI1NTQ3Nzc3NDc0NjIx.XoZ_gg.rxPtMPnjOjwSDt1FAqiFb7nQrjY
+\ No newline at end of file
