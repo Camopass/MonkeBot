@@ -128,7 +128,7 @@ class StarboardMessage_:
         cls.embed = discord.Embed(title='Message', url=cls.jump_url, description=cls.original_message.content,
                                   color=star_color)
         cls.embed.add_field(name='Jump!', value=f'[Jump!]({cls.jump_url})')
-        author = name(cls.author).replace('-', '_')
+        author = cls.author.name.replace('-', '_')
         cls.embed.set_author(
             name=f'{author} - {star_count}', icon_url=cls.icon_url)
         # Set up the message embed

@@ -18,10 +18,10 @@ class Roll(commands.Cog):
             e = discord.Embed(title=self.config.cosmetics.text.fail,
                               description='You have to include the dice roll.',
                               color=self.config.cosmetics.color.fail
-            )
+                              )
             return await ctx.send(embed=e)
         res = []
-        dice = re.split(r' +?\+ *', roll)
+        dice = re.split(r'\s*\+\s*', roll)
         for die in dice:
             res.append(f'`{die}`')
             try:
@@ -32,7 +32,8 @@ class Roll(commands.Cog):
                     d = die.split('d')
                     for i in range(int(d[0])):
                         res.append(random.randint(1, int(d[1])))
-            except ValueError:
+            except ValueError as e:
+                print(e)
                 return await ctx.send(embed=discord.Embed(
                     title=self.config.cosmetics.text.fail,
                     description='Could not understand that value.',
@@ -49,7 +50,7 @@ class Roll(commands.Cog):
             title=f'Roll: **{roll}**',
             description=f'`{total}`: {res}',
             color=self.config.cosmetics.color.success
-        )
+            )
         await ctx.send(embed=e)
 
 
