@@ -1,9 +1,70 @@
-import discord
-import random
 import re
-
+import random
+from operator import sub, mul, add, truediv
 from discord.ext import commands
+from util.lists import split_list
 from util.Config import load_config
+
+
+def roll_dice(dice):
+    amount, sides = dice.split('d')
+    return sum([random.randint(1, int(sides)) for _ in range(int(amount))])
+
+
+reg = re.compile(r'([+\-\/*])')
+dice_re = re.compile(r'\d{1,2}d\d{1,2}')
+
+
+def is_die(die):
+    if dice_re.fullmatch(die) is not None:
+        return True
+    else:
+        return False
+
+
+def parse_exp(exp):
+    exp = reg.split(exp.replace(' ', ''))
+    for index, i in enumerate(exp):
+        if i == None or '':
+            del exp[index]
+    return exp
+
+
+def is_num(term):
+    r = re.fullmatch(r'(\d?\.\d+)|\d+', term.strip())
+    return False if r is None else True
+
+
+def calculate(terms, level=0):
+    if type(terms) != list:
+        terms = parse_exp(terms)
+    elif len(terms) == 1:
+        terms = terms[0]
+    op = ['-', '+', '/', '*']
+    operators = {
+        '-': sub,
+        '+': add,
+        '/': truediv,
+        '*': mul
+    }
+    if type(terms) == str:
+        if is_num(terms):
+            return float(terms)
+        elif is_die(terms):
+            return roll_dice(terms)
+    elif type(terms) == float:
+        return terms
+    elif type(terms) == int:
+        return float(int)
+
+    operator = op[level]
+    if operator in terms:
+        l = split_list(terms, operator)
+        t1 = calculate(l[0])
+        t2 = calculate(l[1])
+        return operators[operator](t1, t2)
+    else:
+        return calculate(terms, level + 1)
 
 
 class Roll(commands.Cog):
@@ -14,44 +75,7 @@ class Roll(commands.Cog):
 
     @commands.command()
     async def roll(self, ctx, *, roll: str = None):
-        if roll is None:
-            e = discord.Embed(title=self.config.cosmetics.text.fail,
-                              description='You have to include the dice roll.',
-                              color=self.config.cosmetics.color.fail
-                              )
-            return await ctx.send(embed=e)
-        res = []
-        dice = re.split(r'\s*\+\s*', roll)
-        for die in dice:
-            res.append(f'`{die}`')
-            try:
-                if die.startswith('d'):
-                    d = die[-1:]
-                    res.append(random.randint(1, int(d)))
-                else:
-                    d = die.split('d')
-                    for i in range(int(d[0])):
-                        res.append(random.randint(1, int(d[1])))
-            except ValueError as e:
-                print(e)
-                return await ctx.send(embed=discord.Embed(
-                    title=self.config.cosmetics.text.fail,
-                    description='Could not understand that value.',
-                    color=self.config.cosmetics.color.fail
-                ))
-        total = 0
-        for i in res:
-            if type(i) != str:
-                total += i
-        res = [str(i) for i in res]
-        res = ', '.join(res)
-
-        e = discord.Embed(
-            title=f'Roll: **{roll}**',
-            description=f'`{total}`: {res}',
-            color=self.config.cosmetics.color.success
-            )
-        await ctx.send(embed=e)
+        await ctx.send(calculate(roll))
 
 
 def setup(bot):
